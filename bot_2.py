@@ -1,15 +1,12 @@
 from telegram.ext import Updater , CommandHandler, MessageHandler, Filters
 from bot_1 import get_answer
-import ephem
-import datetime
+from wordcout import word_count
+from calc import calc
+import logging
 
-"""date = datetime.datetime.now()
-now_time = date.strftime('%Y.%m.%d')
-def cosm(bot, update):
-    print('loaded /planet')
-    bot.sendMessage(update.message.chat_id , planets = input('Enter a planet you need'))
-    planet = ephem.planets(now_time)
-    bot.sendMessage(update.message.chat_id, ephem.constellation(planet))"""
+logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.INFO)
 
 
 def greet_user(bot, update):
@@ -26,11 +23,12 @@ def bot():
     updater = Updater("353342905:AAH8q8DLhpUXPI3K-uRkxJwU4cdqLxgnRbs")
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
-    #dp.add_handler(CommandHandler("planet", cosm))
-    dp.add_error_handler(show_error)
-    dp.add_handler(MessageHandler([Filters.text], talk_to_me))
-    #dp.add_handler(MessageHandler([Filters.text], cosm))
+    dp.add_handler(CommandHandler("wordcount", word_count))
+    dp.add_handler(CommandHandler("calc", calc))
 
+    dp.add_error_handler(show_error)
+
+    dp.add_handler(MessageHandler([Filters.text], talk_to_me))
 
     updater.start_polling()
     updater.idle()
